@@ -191,8 +191,8 @@ def simpson(y, dx=1):
 
 
 def cumulative_trapezoid(y, dx=1, initial=[]):
-    return cumulative_composite(y, dx=dx, order=1)
+    return cumulative_composite(y, dx=dx, initial=initial, order=1)
 
 
 def cumulative_simpson(y, dx=1, initial=[]):
-    return cumulative_composite(y, dx=dx, order=3)
+    return cumulative_composite(y, dx=dx, initial=initial, order=3)
