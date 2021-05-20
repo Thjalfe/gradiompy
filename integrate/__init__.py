@@ -11,7 +11,7 @@ Integrating functions, given fixed samples
    
 """
 from ._quadrature import (
-    composite, cumulative_composite)
+    composite, cumulative_composite, trapezoid, cumulative_trapezoid, simpson, cumulative_simpson)
 
 __all__ = [
-    'composite', 'cumulative_composite']
+    'composite', 'cumulative_composite', 'trapezoid', 'cumulative_trapezoid', 'cumulative_trapezoid', 'simpson', 'cumulative_simpson']

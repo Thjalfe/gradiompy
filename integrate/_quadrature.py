@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.signal import convolve
 
-
+    
 def composite(y, dx=1, order=3):
     """
     Integrate y(x) for regularly spaced x.
@@ -25,25 +25,33 @@ def composite(y, dx=1, order=3):
     --------
     scipy.integrate.trapezoid, scipy.integrate.simpson
     gradiompy.integrate.cumulative_composite
+	
+	Note
+	----
+	The result is exact if `y` is sampled from a polynomial function of order
+	`order` or less.
     
-    Examples
-    --------
+    Example
+    -------
     >>> import numpy as np
     >>> from scipy import integrate as sp_integrate
     >>> from gradiompy import integrate as gp_integrate
-
-    >>> x = np.linspace(0,3,num=25)
+	
+    >>> x = np.linspace(-3,3,num=15)
     >>> dx = x[1]-x[0]
-    >>> y = np.sin(3.5*x)
-    >>> y_int = -np.cos(3.5*x)/3.5
+    >>> y = 8*x + 3*x**2 + x**3 - 2*x**5 + x**6 + 1/5*x**7
+    >>> y_int = 4*x**2 + x**3 + 1/4*x**4 - 1/3*x**6 + 1/7*x**7 + 1/40*x**8
     >>> y_int = y_int[-1]-y_int[0]
-    >>> y_int_approx = sp_integrate.trapezoid(y,dx=dx)
-    >>> err = abs(y_int_approx-y_int)
-    >>> print('Integration error:\n  trapz   = %.3e' % err)
-    >>> for order in range(1,8):
-    >>>     y_int_approx = gp_integrate.composite(y,dx,order=order)
-    >>>     err = abs(y_int_approx-y_int)
-    >>>     print('  order %i = %.3e' % (order,err))
+    >>> y_int_trapz = sp_integrate.trapezoid(y,dx=dx)
+    >>> y_int_simps = sp_integrate.simpson(y,dx=dx)
+    >>> print('Integration error:')
+    >>> print('  scipy.integrate')
+    >>> print('    trapz    = %9.6f' % abs(y_int_trapz-y_int))
+    >>> print('    simpson  = %9.6f' % abs(y_int_simps-y_int))
+    >>> print('  gradiompy.integrate')
+    >>> for order in range(1,8,2):
+    >>>     y_int_composite = gp_integrate.composite(y,dx,order=order)
+    >>>     print('    order %i  = %9.6f' % (order,abs(y_int_composite-y_int)))
     
     """
     # format inputs
@@ -103,23 +111,29 @@ def cumulative_composite(y, dx=1, initial=[], order=3):
     scipy.integrate.cumulative_trapezoid
     gradiompy.integrate.composite
     
-    Examples
-    --------
+    Note
+	----
+	The result is exact if `y` is sampled from a polynomial function of order
+	`order` or less.
+    
+    Example
+    -------
     >>> import numpy as np
     >>> from scipy import integrate as sp_integrate
     >>> from gradiompy import integrate as gp_integrate
-
-    >>> x = np.linspace(0,3,num=25)
+    
+    >>> x = np.linspace(-3,3,num=15)
     >>> dx = x[1]-x[0]
-    >>> y = np.sin(3.5*x)
-    >>> y_int = -np.cos(3.5*x)/3.5
-    >>> y_int_approx = sp_integrate.cumulative_trapezoid(y,dx=dx,initial=0) + y_int[0]
-    >>> err = np.linalg.norm(y_int_approx-y_int)
-    >>> print('Norm of residuals:\n  cumtrapz = %.3e' % err)
-    >>> for order in range(1,8):
-    >>>     y_int_approx = gp_integrate.cumulative_composite(y,dx,initial=y_int[0],order=order)
-    >>>     err = np.linalg.norm(y_int_approx-y_int)
-    >>>     print('  order %i  = %.3e' % (order,err))
+    >>> y = 8*x + 3*x**2 + x**3 - 2*x**5 + x**6 + 1/5*x**7
+    >>> y_int = 4*x**2 + x**3 + 1/4*x**4 - 1/3*x**6 + 1/7*x**7 + 1/40*x**8
+    >>> y_int_trapz = y_int [0] + sp_integrate.cumulative_trapezoid(y,dx=dx,initial=0)
+    >>> print('Integration error:')
+    >>> print('  scipy.integrate')
+    >>> print('    cumtrapz = %9.6f' % np.linalg.norm(y_int_trapz-y_int))
+    >>> print('  gradiompy.integrate')
+    >>> for order in range(1,8,2):
+    >>>     y_int_composite = gp_integrate.cumulative_composite(y,dx,order=order,initial=y_int[0])
+    >>>     print('    order %i  = %9.6f' % (order,np.linalg.norm(y_int_composite-y_int)))
     
     """
     # format inputs
@@ -166,3 +180,19 @@ def cumulative_composite(y, dx=1, initial=[], order=3):
     
     # return the cumulative integral
     return np.cumsum(dy)
+
+
+def trapezoid(y, dx=1):
+    return composite(y, dx=dx, order=1)
+
+
+def simpson(y, dx=1):
+    return composite(y, dx=dx, order=3)
+
+
+def cumulative_trapezoid(y, dx=1, initial=[]):
+    return cumulative_composite(y, dx=dx, order=1)
+
+
+def cumulative_simpson(y, dx=1, initial=[]):
+    return cumulative_composite(y, dx=dx, order=3)
