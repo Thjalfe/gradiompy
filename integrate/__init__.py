@@ -6,8 +6,12 @@ Integration (`gradiompy.integrate`)
 Integrating functions, given fixed samples
 ==========================================
 
-   composite            -- Use composite rule of given order to compute integral.
-   cumulative_composite -- Use composite rule of given order to cumulatively compute integral.
+   composite
+   trapezoid
+   simpson
+   cumulative_composite
+   cumulative_trapezoid
+   cumulative_simpson
    
 """
 from ._quadrature import (

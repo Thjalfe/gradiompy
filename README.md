@@ -12,3 +12,6 @@ Using any of these subpackages requires an explicit import. For example, ``impor
   - `cumulative_trapezoid` --- Cumulative version of `trapezoid`
   - `cumulative_simpson` --- Cumulative version of `simpson`
   - `cumulative_composite` --- Cumulative version of `composite`
+  
+- **interpolate** --- Univariate interpolation functions and classes:
+  - `DiscontinuousInterpolator` --- Cubic polynomial interpolator handling discontinuities
