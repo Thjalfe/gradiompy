@@ -12,7 +12,9 @@ def local_interpolate(x, y, xi, axis=0, order=3, default_value=np.nan,
     Local interpolation of a set of points using Lagrange polynomials.
     
     The polynomials are generated from the `order+1` points in `x` that are
-    closest to each `xi`. Compared to other interpolation method,  
+    closest to each `xi`. Compared to other interpolation methods, this
+    function is particularly well-suited for few query points `xi` and large
+    2-D arrays `y`, with `y.shape[1-axis]` larger than ~1000.
     
     Parameters
     ----------
@@ -87,6 +89,7 @@ def local_interpolate(x, y, xi, axis=0, order=3, default_value=np.nan,
             ind = ~np.isfinite(y)
         else:
             ind = np.any(~np.isfinite(y), axis=1)
+        x = x.copy()
         x[ind] = np.inf
         _, ind = np.unique(x, return_index=True)
         ind = np.setdiff1d(np.arange(len(x)), ind, assume_unique=True)
