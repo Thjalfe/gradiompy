@@ -110,7 +110,8 @@ def local_interpolate(x, y, xi, axis=0, order=3, default_value=np.nan,
             else:
                 yi = default_value
         elif order == 0: # Constant
-            yi = y[0]
+            i = np.argmin(np.abs(x-xi))
+            yi = y[i]
         elif order == 1: # Linear
             i, j = np.argsort(np.abs(x-xi))[:2]
             yi = (y[i] * ((xi-x[j])/(x[i]-x[j])) + 
