@@ -5,6 +5,9 @@ from scipy.interpolate import (Akima1DInterpolator, PchipInterpolator,
                                CubicSpline, PPoly)
 
 
+__all__ = ["DiscontinuousInterpolator"]
+
+
 class DiscontinuousInterpolator(PPoly):
     """
     Cubic polynomial interpolator handling discontinuities.
@@ -44,7 +47,8 @@ class DiscontinuousInterpolator(PPoly):
         Whether to extrapolate to out-of-bounds points based on first and last
         intervals, or to return NaNs. Default is True.
     assume_clean : bool, optional
-        If False, all input arrays are cleaned according to descriptions above.
+        If False, all input arrays are cleaned according to rules above.
+		Default is True.
         
     See Also
     --------
@@ -63,16 +67,14 @@ class DiscontinuousInterpolator(PPoly):
     >>> titles = ['Discontinuous function at x = 1.0',
     >>>           'Discontinuous derivative at x = 1.0']
     >>> for count, title in enumerate(titles):
-        
     >>>     x = np.arange(0, 2, 0.15)
     >>>     y = np.piecewise(x, [x < 1, x >= 1],
     >>>             [lambda x: 1-(x-0.5)**2, lambda x: count-(x-1.5)**2])
-    >>>     x_knots = 1
+    >>>     x_knots = [1]
     >>>     y_knots = [[np.nan, np.nan]] if count == 0 else [np.nan]
     >>>     InterpCubic = CubicSpline(x, y)
     >>>     InterpDiscontinuous = DiscontinuousInterpolator(x, y,
     >>>             x_knots=x_knots, y_knots=y_knots)
-    
     >>>     x_interp = np.linspace(0, 2, 999)
     >>>     if count == 0: plt.clf()
     >>>     plt.subplot(1,2,count+1)
@@ -86,7 +88,7 @@ class DiscontinuousInterpolator(PPoly):
     """
     
     def __init__(self, x, y, x_knots=None, y_knots=None, kind='Cubic',
-                 extrapolate=True, assume_clean=False):
+                 extrapolate=True, assume_clean=True):
         if x_knots is None: x_knots = np.empty(0, float)
         if y_knots is None: y_knots = [np.nan]*np.size(x_knots)
                     

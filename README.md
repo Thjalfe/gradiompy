@@ -15,3 +15,4 @@ Using any of these subpackages requires an explicit import. For example, ``impor
   
 - **interpolate** --- Univariate interpolation functions and classes:
   - `DiscontinuousInterpolator` --- Cubic polynomial interpolator handling discontinuities
+  - `local_interpolate` --- Local interpolation of a set of points using Lagrange polynomials

@@ -9,8 +9,7 @@ Univariate interpolation
    DiscontinuousInterpolator
    
 """
-from ._cubic import (
-    DiscontinuousInterpolator)
+from ._polyint import *
+from ._cubic import *
 
-__all__ = [
-    'DiscontinuousInterpolator']
+__all__ = [s for s in dir() if not s.startswith('_')]
